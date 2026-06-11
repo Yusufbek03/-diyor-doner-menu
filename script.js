@@ -109,7 +109,6 @@ var MENU = [
 
 var cart = {};
 var itemIdMap = {};
-var currentSort = "default";
 var searchQuery = "";
 
 // --- LOCALSTORAGE ---
@@ -174,12 +173,6 @@ function clearSearch() {
 }
 
 // --- SORT ---
-function setSort(mode) {
-  currentSort = mode;
-  document.querySelectorAll(".sort-btn").forEach(function(b) { b.classList.remove("active"); });
-  document.getElementById("sort-" + mode).classList.add("active");
-  rebuildMenu();
-}
 
 // --- BUILD MENU ---
 function buildMenu() {
@@ -197,12 +190,6 @@ function buildMenu() {
         return item.name.toLowerCase().indexOf(searchQuery) !== -1 ||
                (item.detail && item.detail.toLowerCase().indexOf(searchQuery) !== -1);
       });
-    }
-
-    if (currentSort === "asc") {
-      items.sort(function(a, b) { return a.price - b.price; });
-    } else if (currentSort === "desc") {
-      items.sort(function(a, b) { return b.price - a.price; });
     }
 
     if (items.length === 0 && searchQuery) return;

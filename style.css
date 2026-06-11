@@ -214,24 +214,6 @@ header {
 .search-clear.visible { display: flex; }
 .search-clear:hover { color: var(--text); background: var(--border2); }
 
-.sort-btns { display: flex; gap: 6px; }
-.sort-btn {
-  padding: 0.35rem 0.85rem;
-  border-radius: 50px;
-  font-size: clamp(0.72rem, 1.8vw, 0.8rem); font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border2);
-  color: var(--text2);
-  background: transparent;
-  transition: all 0.2s;
-  touch-action: manipulation;
-}
-.sort-btn:hover { border-color: var(--accent); color: var(--accent); }
-.sort-btn.active {
-  background: var(--accent-dim2);
-  border-color: rgba(184,134,11,0.35);
-  color: var(--accent);
-}
 
 /* MAIN */
 main {
@@ -622,7 +604,6 @@ main {
   .modal-actions { flex-direction: column; gap: 0.5rem; }
   .modal-confirm, .modal-cancel { flex: none; width: 100%; }
   .success-sub { max-width: 260px; }
-  .sort-btns { flex-wrap: wrap; }
 }
 
 /* RESPONSIVE - SMALL PHONES */
