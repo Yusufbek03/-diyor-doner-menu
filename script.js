@@ -618,6 +618,48 @@ function resetAll() {
   document.getElementById("success-screen").classList.remove("show");
 }
 
+// --- NOTIFY MODAL ---
+function openNotifyModal() {
+  document.getElementById("notify-overlay").classList.add("open");
+  document.getElementById("notify-modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  var isSub = localStorage.getItem("diyor_subscribed");
+  if (isSub) {
+    var btn = document.getElementById("notify-subscribe-btn");
+    btn.textContent = "✅ Obuna tasdiqlangan";
+    btn.style.background = "#4a9e6f";
+    btn.href = "#";
+    btn.onclick = function(e) { e.preventDefault(); };
+    var checkBtn = document.querySelector(".notify-check-btn");
+    checkBtn.classList.add("verified");
+    checkBtn.textContent = "Obuna faol ✓";
+  }
+}
+
+function closeNotifyModal() {
+  document.getElementById("notify-overlay").classList.remove("open");
+  document.getElementById("notify-modal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function checkSubscription() {
+  var isSub = localStorage.getItem("diyor_subscribed");
+  if (isSub) {
+    showToast("Siz allaqachon obuna bo'lgansiz!");
+  } else {
+    localStorage.setItem("diyor_subscribed", "1");
+    document.querySelector(".notify-check-btn").classList.add("verified");
+    document.querySelector(".notify-check-btn").textContent = "Obuna faol ✓";
+    showToast("Obuna tasdiqlandi!");
+    var btn = document.getElementById("notify-subscribe-btn");
+    btn.textContent = "✅ Obuna tasdiqlangan";
+    btn.style.background = "#4a9e6f";
+    btn.href = "#";
+    btn.onclick = function(e) { e.preventDefault(); };
+  }
+}
+
 // --- TOAST ---
 var toastTimer;
 function showToast(msg) {
