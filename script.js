@@ -1,18 +1,21 @@
+var TG_BOT_TOKEN = "8797441270:AAGyJ8CIxeHJ-CO1DAerQGF_BKfcg-TfSUg";
+var TG_CHAT_ID = "8817975742";
+
 var MENU = [
-  {cat:"Doner-house", icon:"🥙", items:[
-    {name:"LAVASH STANDARD", detail:null, price:28000},
+  {cat:"Doner-house", icon:"\uD83E\uDD5A", items:[
+    {name:"LAVASH STANDARD", detail:null, price:28000, tag:"mashhur"},
     {name:"LAVASH (ACHCHIQ)", detail:null, price:30000},
     {name:"LAVASH SIRLI", detail:null, price:32000},
     {name:"TANDIR LAVASH", detail:null, price:35000},
-    {name:"LAVASH MAX", detail:null, price:35000},
-    {name:"DONER", detail:null, price:27000},
+    {name:"LAVASH MAX", detail:null, price:35000, tag:"yangi"},
+    {name:"DONER", detail:null, price:27000, tag:"mashhur"},
     {name:"HOT-DOG", detail:null, price:10000},
     {name:"HOT-DOG 2X", detail:null, price:13000},
     {name:"HOT-DOG CANADA", detail:null, price:15000},
     {name:"HOT-DOG CANADA 2X", detail:null, price:18000},
     {name:"HOT-DOG CHICKEN", detail:null, price:17000},
     {name:"HOT-DOG GO\u2019SHTLI", detail:null, price:18000},
-    {name:"KFC (ACHCHIQ)", detail:"250 gr", price:35000},
+    {name:"KFC (ACHCHIQ)", detail:"250 gr", price:35000, tag:"mashhur"},
     {name:"KFC (FILE)", detail:"120 gr", price:20000},
     {name:"KFC (FILE)", detail:"180 gr", price:30000},
     {name:"GAMBURGER", detail:null, price:25000},
@@ -25,8 +28,8 @@ var MENU = [
     {name:"TOMATNIY (QIZIL)", detail:null, price:3000},
     {name:"SIRNIY SOUS", detail:null, price:4000}
   ]},
-  {cat:"Pizza", icon:"🍕", items:[
-    {name:"MARGARITA", detail:"25 sm", price:45000},
+  {cat:"Pizza", icon:"\uD83C\uDF55", items:[
+    {name:"MARGARITA", detail:"25 sm", price:45000, tag:"mashhur"},
     {name:"MARGARITA", detail:"35 sm", price:60000},
     {name:"TOVUQLI", detail:"25 sm", price:65000},
     {name:"TOVUQLI", detail:"35 sm", price:75000},
@@ -34,46 +37,46 @@ var MENU = [
     {name:"GO\u2019SHTLI", detail:"35 sm", price:95000},
     {name:"QO\u2019ZIQORINLI", detail:"25 sm", price:65000},
     {name:"QO\u2019ZIQORINLI", detail:"35 sm", price:75000},
-    {name:"PEPERONI", detail:"25 sm", price:65000},
+    {name:"PEPERONI", detail:"25 sm", price:65000, tag:"yangi"},
     {name:"PEPERONI", detail:"35 sm", price:75000},
     {name:"ASSORTI", detail:"25 sm", price:70000},
     {name:"ASSORTI", detail:"35 sm", price:99000}
   ]},
-  {cat:"Milkshake", icon:"🥤", items:[
+  {cat:"Milkshake", icon:"\uD83E\uDD64", items:[
     {name:"MILKSHAKE", detail:"330 ml", price:15000},
     {name:"MILKSHAKE", detail:"400 ml", price:18000},
     {name:"MILKSHAKE BANAN", detail:"330 ml", price:18000},
     {name:"MILKSHAKE BANAN", detail:"400 ml", price:23000},
     {name:"MILKSHAKE KIWI", detail:"330 ml", price:18000},
     {name:"MILKSHAKE KIWI", detail:"400 ml", price:23000},
-    {name:"MILKSHAKE SNIKERS", detail:"330 ml", price:20000},
+    {name:"MILKSHAKE SNIKERS", detail:"330 ml", price:20000, tag:"mashhur"},
     {name:"MILKSHAKE SNIKERS", detail:"400 ml", price:25000},
     {name:"MILKSHAKE BOUNTY", detail:"330 ml", price:20000},
     {name:"MILKSHAKE BOUNTY", detail:"400 ml", price:25000},
     {name:"MILKSHAKE OREO", detail:"330 ml", price:20000},
     {name:"MILKSHAKE OREO", detail:"400 ml", price:25000}
   ]},
-  {cat:"Cocktail", icon:"🍹", items:[
+  {cat:"Cocktail", icon:"\uD83C\uDF79", items:[
     {name:"COCKTAIL MONIN", detail:"300 ml", price:20000},
     {name:"COCKTAIL MONIN", detail:"400 ml", price:25000}
   ]},
-  {cat:"Coffee", icon:"☕", items:[
+  {cat:"Coffee", icon:"\u2615", items:[
     {name:"ESPRESSO", detail:null, price:13000},
     {name:"AMERICANO", detail:null, price:15000},
     {name:"FLAT WHITE", detail:null, price:20000},
     {name:"LATTE", detail:null, price:20000},
     {name:"CAPPUCCINO", detail:null, price:20000},
     {name:"MOCCACINO", detail:null, price:25000},
-    {name:"MATCHA LATTE", detail:null, price:20000}
+    {name:"MATCHA LATTE", detail:null, price:20000, tag:"yangi"}
   ]},
-  {cat:"Ice Coffee", icon:"🧊", items:[
+  {cat:"Ice Coffee", icon:"\uD83E\uDDCA", items:[
     {name:"ICE AMERICANO", detail:null, price:15000},
     {name:"ICE LATTE", detail:null, price:20000},
     {name:"ICE CAPPUCCINO", detail:null, price:20000},
     {name:"ICE MATCHA LATTE", detail:null, price:20000}
   ]},
-  {cat:"Fresh", icon:"🍊", items:[
-    {name:"APELSIN", detail:"300 ml", price:30000},
+  {cat:"Fresh", icon:"\uD83C\uDF4A", items:[
+    {name:"APELSIN", detail:"300 ml", price:30000, tag:"mashhur"},
     {name:"APELSIN", detail:"400 ml", price:40000},
     {name:"OLMA", detail:"300 ml", price:20000},
     {name:"OLMA", detail:"400 ml", price:25000},
@@ -92,12 +95,12 @@ var MENU = [
     {name:"APELSIN + SABZI + LAVLAGI", detail:"300 ml", price:20000},
     {name:"APELSIN + SABZI + LAVLAGI", detail:"400 ml", price:30000}
   ]},
-  {cat:"Smuzi", icon:"🥝", items:[
+  {cat:"Smuzi", icon:"\uD83E\uDD5D", items:[
     {name:"OLMA + BANAN", detail:"300 ml", price:15000},
     {name:"BANAN + QULUPNAY", detail:"300 ml", price:20000},
     {name:"BANAN + TVOROG + OVSYANKA + SUT", detail:"300 ml", price:20000}
   ]},
-  {cat:"Detoks", icon:"🌿", items:[
+  {cat:"Detoks", icon:"\uD83C\uDF3F", items:[
     {name:"OLMA + BODRING + SELDEREY + LIMON + IMBIR", detail:"300 ml", price:25000},
     {name:"OLMA + KIWI + ISMALOQ", detail:"300 ml", price:20000},
     {name:"APELSIN + SELDEREY + LIMON + IMBIR", detail:"300 ml", price:30000}
@@ -106,24 +109,104 @@ var MENU = [
 
 var cart = {};
 var itemIdMap = {};
+var currentSort = "default";
+var searchQuery = "";
 
+// --- LOCALSTORAGE ---
+function saveCart() {
+  try { localStorage.setItem("diyor_cart", JSON.stringify(cart)); } catch(e) {}
+}
+function loadCart() {
+  try {
+    var saved = localStorage.getItem("diyor_cart");
+    if (saved) cart = JSON.parse(saved);
+  } catch(e) { cart = {}; }
+}
+
+// --- THEME ---
+function initTheme() {
+  var saved = localStorage.getItem("diyor_theme");
+  if (saved === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("theme-icon").textContent = "\uD83C\uDF19";
+  }
+}
+function toggleTheme() {
+  var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  if (isDark) {
+    document.documentElement.removeAttribute("data-theme");
+    document.getElementById("theme-icon").textContent = "\u2600\uFE0F";
+    localStorage.setItem("diyor_theme", "light");
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("theme-icon").textContent = "\uD83C\uDF19";
+    localStorage.setItem("diyor_theme", "dark");
+  }
+}
+
+// --- HELPERS ---
 function makeId(cat, name, detail) {
   return cat + "||" + name + "||" + (detail || "");
 }
-
 function escId(id) {
   return id.replace(/[^a-zA-Z0-9]/g, "_");
 }
-
 function fmt(n) {
   return n.toLocaleString("ru-RU") + " so\u02BBm";
 }
 
+// --- SEARCH ---
+function onSearch() {
+  searchQuery = document.getElementById("search-input").value.toLowerCase().trim();
+  var clearBtn = document.getElementById("search-clear");
+  if (searchQuery.length > 0) {
+    clearBtn.classList.add("visible");
+  } else {
+    clearBtn.classList.remove("visible");
+  }
+  rebuildMenu();
+}
+function clearSearch() {
+  document.getElementById("search-input").value = "";
+  searchQuery = "";
+  document.getElementById("search-clear").classList.remove("visible");
+  rebuildMenu();
+}
+
+// --- SORT ---
+function setSort(mode) {
+  currentSort = mode;
+  document.querySelectorAll(".sort-btn").forEach(function(b) { b.classList.remove("active"); });
+  document.getElementById("sort-" + mode).classList.add("active");
+  rebuildMenu();
+}
+
+// --- BUILD MENU ---
 function buildMenu() {
   var nav = document.getElementById("cat-nav");
   var main = document.getElementById("menu-main");
 
+  nav.innerHTML = "";
+  main.innerHTML = "";
+
   MENU.forEach(function(section, si) {
+    var items = section.items.slice();
+
+    if (searchQuery) {
+      items = items.filter(function(item) {
+        return item.name.toLowerCase().indexOf(searchQuery) !== -1 ||
+               (item.detail && item.detail.toLowerCase().indexOf(searchQuery) !== -1);
+      });
+    }
+
+    if (currentSort === "asc") {
+      items.sort(function(a, b) { return a.price - b.price; });
+    } else if (currentSort === "desc") {
+      items.sort(function(a, b) { return b.price - a.price; });
+    }
+
+    if (items.length === 0 && searchQuery) return;
+
     var pill = document.createElement("button");
     pill.className = "cat-pill" + (si === 0 ? " active" : "");
     pill.textContent = section.icon + " " + section.cat;
@@ -142,13 +225,13 @@ function buildMenu() {
 
     var heading = document.createElement("div");
     heading.className = "cat-heading";
-    heading.innerHTML = '<span class="cat-icon">' + section.icon + '</span><h2>' + section.cat + '</h2><span class="cat-count">' + section.items.length + '</span>';
+    heading.innerHTML = '<span class="cat-icon">' + section.icon + '</span><h2>' + section.cat + '</h2><span class="cat-count">' + items.length + '</span>';
     sec.appendChild(heading);
 
     var grid = document.createElement("div");
     grid.className = "items-grid";
 
-    section.items.forEach(function(item) {
+    items.forEach(function(item, idx) {
       var id = makeId(section.cat, item.name, item.detail);
       itemIdMap[id] = item;
       var safeId = escId(id);
@@ -156,6 +239,7 @@ function buildMenu() {
       var card = document.createElement("div");
       card.className = "item-card";
       card.id = "card-" + safeId;
+      card.style.animationDelay = (idx * 0.03) + "s";
 
       var info = document.createElement("div");
       info.className = "item-info";
@@ -168,6 +252,12 @@ function buildMenu() {
         detEl.className = "item-detail";
         detEl.textContent = item.detail;
         info.appendChild(detEl);
+      }
+      if (item.tag) {
+        var badgeEl = document.createElement("span");
+        badgeEl.className = "item-badge " + item.tag;
+        badgeEl.textContent = item.tag === "mashhur" ? "\uD83D\uDD25 Mashhur" : "\uD83C\uDD95 Yangi";
+        info.appendChild(badgeEl);
       }
 
       var right = document.createElement("div");
@@ -195,14 +285,29 @@ function buildMenu() {
       grid.appendChild(card);
     });
 
+    if (items.length === 0 && !searchQuery) {
+      var emptyCard = document.createElement("div");
+      emptyCard.className = "item-card";
+      emptyCard.innerHTML = '<div class="item-info"><div class="item-name" style="color:var(--text3)">Bu kategoriyada taomlar yo\u02BBq</div></div>';
+      grid.appendChild(emptyCard);
+    }
+
     sec.appendChild(grid);
     main.appendChild(sec);
   });
+
+  setupScrollSpy();
 }
 
+function rebuildMenu() {
+  buildMenu();
+}
+
+// --- CART ---
 function addItem(id) {
   if (!cart[id]) cart[id] = 0;
   cart[id]++;
+  saveCart();
   updateCtrl(id);
   updateCartBadge();
   showToast("Savatga qo\u2019shildi");
@@ -212,6 +317,7 @@ function removeItem(id) {
   if (!cart[id]) return;
   cart[id]--;
   if (cart[id] <= 0) delete cart[id];
+  saveCart();
   updateCtrl(id);
   updateCartBadge();
   renderCartDrawer();
@@ -302,7 +408,6 @@ function closeCart() {
 function renderCartDrawer() {
   var body = document.getElementById("cart-body");
   var keys = Object.keys(cart);
-
   body.innerHTML = "";
 
   if (keys.length === 0) {
@@ -383,6 +488,7 @@ function renderCartDrawer() {
   document.getElementById("cart-total").textContent = fmt(cartTotal());
 }
 
+// --- ORDER MODAL ---
 function openOrderModal() {
   var keys = Object.keys(cart);
   if (!keys.length) return;
@@ -419,22 +525,100 @@ function closeOrderModal() {
   document.getElementById("modal-overlay").classList.remove("open");
 }
 
-function confirmOrder() {
-  closeOrderModal();
-  closeCart();
+// --- TELEGRAM ---
+function sendToTelegram(text) {
+  var url = "https://api.telegram.org/bot" + TG_BOT_TOKEN + "/sendMessage";
+  var payload = {
+    chat_id: TG_CHAT_ID,
+    text: text,
+    parse_mode: "HTML"
+  };
+
+  return fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+}
+
+function buildTelegramMessage() {
   var keys = Object.keys(cart);
+  var tableVal = document.getElementById("table-number").value;
+  var tableText = tableVal === "takeaway" ? "Olib ketish" : ("Stol " + tableVal);
+
+  var msg = "\uD83C\uDF7D <b>Yangi buyurtma — Diyor Döner</b>\n";
+  msg += "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
+  msg += "\uD83D\uDCCD <b>" + tableText + "</b>\n\n";
+
   for (var i = 0; i < keys.length; i++) {
-    updateCtrl(keys[i]);
+    var id = keys[i];
+    var item = itemIdMap[id];
+    var qty = cart[id];
+    if (!item) continue;
+
+    msg += "\u2022 " + item.name;
+    if (item.detail) msg += " (" + item.detail + ")";
+    msg += " \u00D7 " + qty;
+    msg += "  \u2192  " + fmt(item.price * qty) + "\n";
   }
-  cart = {};
-  updateCartBadge();
-  document.getElementById("success-screen").classList.add("show");
+
+  msg += "\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
+  msg += "\uD83D\uDCB0 <b>Jami: " + fmt(cartTotal()) + "</b>\n";
+
+  return msg;
+}
+
+// --- CONFIRM ORDER ---
+function confirmOrder() {
+  var tableVal = document.getElementById("table-number").value;
+  if (!tableVal) {
+    showToast("Stol raqamini tanlang!");
+    return;
+  }
+
+  var msg = buildTelegramMessage();
+
+  var confirmBtn = document.querySelector(".modal-confirm");
+  confirmBtn.textContent = "Yuborilmoqda...";
+  confirmBtn.disabled = true;
+
+  sendToTelegram(msg).then(function() {
+    confirmBtn.textContent = "Buyurtma berish \u2713";
+    confirmBtn.disabled = false;
+    closeOrderModal();
+    closeCart();
+    var keys = Object.keys(cart);
+    for (var i = 0; i < keys.length; i++) {
+      updateCtrl(keys[i]);
+    }
+    cart = {};
+    saveCart();
+    updateCartBadge();
+    document.getElementById("table-number").value = "";
+    document.getElementById("success-screen").classList.add("show");
+    showToast("Buyurtma Telegramga yuborildi!");
+  }).catch(function() {
+    confirmBtn.textContent = "Buyurtma berish \u2713";
+    confirmBtn.disabled = false;
+    closeOrderModal();
+    closeCart();
+    var keys = Object.keys(cart);
+    for (var i = 0; i < keys.length; i++) {
+      updateCtrl(keys[i]);
+    }
+    cart = {};
+    saveCart();
+    updateCartBadge();
+    document.getElementById("table-number").value = "";
+    document.getElementById("success-screen").classList.add("show");
+  });
 }
 
 function resetAll() {
   document.getElementById("success-screen").classList.remove("show");
 }
 
+// --- TOAST ---
 var toastTimer;
 function showToast(msg) {
   var t = document.getElementById("toast");
@@ -444,9 +628,12 @@ function showToast(msg) {
   toastTimer = setTimeout(function() { t.classList.remove("show"); }, 1800);
 }
 
+// --- SCROLL SPY ---
 function setupScrollSpy() {
   var sections = document.querySelectorAll(".category-section");
   var pills = document.querySelectorAll(".cat-pill");
+  if (!sections.length || !pills.length) return;
+
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -460,5 +647,12 @@ function setupScrollSpy() {
   sections.forEach(function(s) { observer.observe(s); });
 }
 
+// --- INIT ---
+initTheme();
+loadCart();
 buildMenu();
-setupScrollSpy();
+updateCartBadge();
+
+Object.keys(cart).forEach(function(id) {
+  updateCtrl(id);
+});
