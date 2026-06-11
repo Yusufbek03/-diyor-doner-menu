@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diyor Döner — Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f3ef; --surface: #ffffff; --surface2: #f0ede8;
+      --border: rgba(0,0,0,0.08); --border2: rgba(0,0,0,0.14);
+      --text: #1a1a1a; --text2: #6b6460; --text3: #9a938d;
+      --accent: #b8860b; --accent2: #a07608;
+      --accent-dim: rgba(184,134,11,0.08); --accent-dim2: rgba(184,134,11,0.15);
+      --red: #c94f3a; --green: #4a9e6f;
+      --radius: 16px; --radius-sm: 10px;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 1rem;
+    }
+    .admin-wrap { max-width: 800px; margin: 0 auto; }
+    .admin-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .admin-header h1 {
+      font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800;
+    }
+    .admin-header h1 span { color: var(--accent); }
+    .admin-links { display: flex; gap: 8px; }
+    .admin-links a, .admin-links button {
+      padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.82rem; font-weight: 500;
+      text-decoration: none; cursor: pointer; border: 1px solid var(--border2);
+      background: var(--surface); color: var(--text2); transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .admin-links a:hover, .admin-links button:hover {
+      border-color: var(--accent); color: var(--accent);
+    }
+    .admin-links .danger { border-color: var(--red); color: var(--red); }
+    .admin-links .danger:hover { background: rgba(201,79,58,0.08); }
+
+    /* ADD CATEGORY */
+    .add-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem;
+    }
+    .add-section h2 {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .form-row {
+      display: flex; gap: 8px; margin-bottom: 0.75rem; flex-wrap: wrap;
+    }
+    .form-row input, .form-row select, .form-row textarea {
+      padding: 0.5rem 0.75rem; border: 1px solid var(--border2);
+      border-radius: var(--radius-sm); background: var(--surface2);
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-row input::placeholder { color: var(--text3); }
+    .form-row input[type="text"] { flex: 1; min-width: 150px; }
+    .form-row input[type="number"] { width: 130px; }
+    .form-row select { min-width: 160px; cursor: pointer; }
+    .form-row textarea { width: 100%; resize: none; }
+    .btn {
+      padding: 0.5rem 1.1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent2); }
+    .btn-success { background: var(--green); color: #fff; }
+    .btn-success:hover { background: #3d8a5e; }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-danger:hover { background: #b0432f; }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border2); color: var(--text2);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm { padding: 0.35rem 0.8rem; font-size: 0.78rem; }
+
+    /* CATEGORY LIST */
+    .cat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;
+    }
+    .cat-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+      background: var(--surface2); cursor: pointer; user-select: none;
+    }
+    .cat-card-header h3 {
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .cat-card-header .cat-count {
+      font-size: 0.72rem; color: var(--text3); background: var(--surface);
+      border: 1px solid var(--border); padding: 2px 8px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+    }
+    .cat-card-actions { display: flex; gap: 6px; align-items: center; }
+    .cat-card-body { padding: 0; }
+    .cat-card-body.collapsed { display: none; }
+
+    .item-row {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem 1.25rem; border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-row:hover { background: var(--surface2); }
+    .item-row .item-info { flex: 1; min-width: 0; }
+    .item-row .item-name {
+      font-size: 0.88rem; font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .item-row .item-detail { font-size: 0.75rem; color: var(--text3); }
+    .item-row .item-price {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      color: var(--accent); white-space: nowrap; font-size: 0.9rem;
+    }
+    .item-row .item-badge {
+      font-size: 0.6rem; padding: 1px 5px; border-radius: 4px;
+      font-weight: 600; text-transform: uppercase;
+    }
+    .item-badge.mashhur { background: rgba(201,79,58,0.12); color: #c94f3a; }
+    .item-badge.yangi { background: rgba(74,158,111,0.12); color: #4a9e6f; }
+    .item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .empty-cat {
+      padding: 1.5rem; text-align: center; color: var(--text3); font-size: 0.85rem;
+    }
+
+    /* EDIT MODAL */
+    .edit-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .edit-overlay.open { display: flex; }
+    .edit-modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius); padding: 1.5rem;
+      max-width: 440px; width: 100%;
+    }
+    .edit-modal h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .edit-modal .form-row { margin-bottom: 0.75rem; }
+    .edit-modal label {
+      display: block; font-size: 0.8rem; font-weight: 500;
+      color: var(--text2); margin-bottom: 0.3rem;
+    }
+    .edit-modal input, .edit-modal select {
+      width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border2);
+      border-radius: var(--radius-sm); background: var(--surface2);
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      outline: none;
+    }
+    .edit-modal input:focus, .edit-modal select:focus { border-color: var(--accent); }
+    .edit-actions { display: flex; gap: 8px; margin-top: 1rem; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text); color: #fff;
+      font-size: 0.875rem; padding: 0.7rem 1.25rem; border-radius: 50px;
+      opacity: 0; transition: all 0.3s; z-index: 200;
+      white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 600px) {
+      body { padding: 0.5rem; }
+      .admin-header h1 { font-size: 1.2rem; }
+      .form-row { flex-direction: column; }
+      .form-row input[type="number"] { width: 100%; }
+      .form-row select { width: 100%; }
+      .item-row { padding: 0.6rem 1rem; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <div class="admin-header">
+    <h1>Admin <span>Panel</span></h1>
+    <div class="admin-links">
+      <a href="index.html">Menyuga qaytish</a>
+      <button class="danger" onclick="resetAllData()">Barchasini tozalash</button>
+    </div>
+  </div>
+
+  <!-- Yangi kategoriya -->
+  <div class="add-section">
+    <h2>+ Yangi kategoriya</h2>
+    <div class="form-row">
+      <input type="text" id="new-cat-name" placeholder="Kategoriya nomi (masalan: Burger)">
+      <input type="text" id="new-cat-icon" placeholder="Emoji (🍔)" maxlength="4" style="width:80px;min-width:80px">
+      <button class="btn btn-primary" onclick="addCategory()">Qo'shish</button>
+    </div>
+  </div>
+
+  <!-- Yangi mahsulot -->
+  <div class="add-section">
+    <h2>+ Yangi mahsulot</h2>
+    <div class="form-row">
+      <select id="add-cat-select"></select>
+    </div>
+    <div class="form-row">
+      <input type="text" id="add-item-name" placeholder="Mahsulot nomi">
+      <input type="text" id="add-item-detail" placeholder="Tavsif (masalan: 300 ml)" style="max-width:160px">
+      <input type="number" id="add-item-price" placeholder="Narxi" min="0">
+      <select id="add-item-tag" style="max-width:130px">
+        <option value="">Belgi yo'q</option>
+        <option value="mashhur">🔥 Mashhur</option>
+        <option value="yangi">🆕 Yangi</option>
+      </select>
+      <button class="btn btn-success" onclick="addItem()">Qo'shish</button>
+    </div>
+  </div>
+
+  <!-- Kategoriyalar ro'yxati -->
+  <div id="cat-list"></div>
+</div>
+
+<!-- Edit modal -->
+<div class="edit-overlay" id="edit-overlay">
+  <div class="edit-modal">
+    <h3>Tahrirlash</h3>
+    <label>Nomi</label>
+    <input type="text" id="edit-name">
+    <label>Tavsif</label>
+    <input type="text" id="edit-detail">
+    <label>Narxi (so'm)</label>
+    <input type="number" id="edit-price" min="0">
+    <label>Belgi</label>
+    <select id="edit-tag">
+      <option value="">Belgi yo'q</option>
+      <option value="mashhur">🔥 Mashhur</option>
+      <option value="yangi">🆕 Yangi</option>
+    </select>
+    <div class="edit-actions">
+      <button class="btn btn-outline" onclick="closeEdit()">Bekor qilish</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Saqlash</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var DEFAULT_MENU = [
+  {cat:"Doner-house", icon:"\uD83E\uDD5A", items:[
+    {name:"LAVASH STANDARD", detail:null, price:28000, tag:"mashhur"},
+    {name:"LAVASH (ACHCHIQ)", detail:null, price:30000},
+    {name:"LAVASH SIRLI", detail:null, price:32000},
+    {name:"TANDIR LAVASH", detail:null, price:35000},
+    {name:"LAVASH MAX", detail:null, price:35000, tag:"yangi"},
+    {name:"DONER", detail:null, price:27000, tag:"mashhur"},
+    {name:"HOT-DOG", detail:null, price:10000},
+    {name:"HOT-DOG 2X", detail:null, price:13000},
+    {name:"HOT-DOG CANADA", detail:null, price:15000},
+    {name:"HOT-DOG CANADA 2X", detail:null, price:18000},
+    {name:"HOT-DOG CHICKEN", detail:null, price:17000},
+    {name:"HOT-DOG GO\u2019SHTLI", detail:null, price:18000},
+    {name:"KFC (ACHCHIQ)", detail:"250 gr", price:35000, tag:"mashhur"},
+    {name:"KFC (FILE)", detail:"120 gr", price:20000},
+    {name:"KFC (FILE)", detail:"180 gr", price:30000},
+    {name:"GAMBURGER", detail:null, price:25000},
+    {name:"CHIZBURGER", detail:null, price:28000},
+    {name:"FRI", detail:null, price:15000},
+    {name:"XALAPENO", detail:null, price:2000},
+    {name:"BULOCHKA", detail:null, price:2000},
+    {name:"SIR", detail:null, price:4000},
+    {name:"CHESNOCHNIY (OQ)", detail:null, price:3000},
+    {name:"TOMATNIY (QIZIL)", detail:null, price:3000},
+    {name:"SIRNIY SOUS", detail:null, price:4000}
+  ]},
+  {cat:"Pizza", icon:"\uD83C\uDF55", items:[
+    {name:"MARGARITA", detail:"25 sm", price:45000, tag:"mashhur"},
+    {name:"MARGARITA", detail:"35 sm", price:60000},
+    {name:"TOVUQLI", detail:"25 sm", price:65000},
+    {name:"TOVUQLI", detail:"35 sm", price:75000},
+    {name:"GO\u2019SHTLI", detail:"25 sm", price:65000},
+    {name:"GO\u2019SHTLI", detail:"35 sm", price:95000},
+    {name:"QO\u2019ZIQORINLI", detail:"25 sm", price:65000},
+    {name:"QO\u2019ZIQORINLI", detail:"35 sm", price:75000},
+    {name:"PEPERONI", detail:"25 sm", price:65000, tag:"yangi"},
+    {name:"PEPERONI", detail:"35 sm", price:75000},
+    {name:"ASSORTI", detail:"25 sm", price:70000},
+    {name:"ASSORTI", detail:"35 sm", price:99000}
+  ]},
+  {cat:"Milkshake", icon:"\uD83E\uDD64", items:[
+    {name:"MILKSHAKE", detail:"330 ml", price:15000},
+    {name:"MILKSHAKE", detail:"400 ml", price:18000},
+    {name:"MILKSHAKE BANAN", detail:"330 ml", price:18000},
+    {name:"MILKSHAKE BANAN", detail:"400 ml", price:23000},
+    {name:"MILKSHAKE KIWI", detail:"330 ml", price:18000},
+    {name:"MILKSHAKE KIWI", detail:"400 ml", price:23000},
+    {name:"MILKSHAKE SNIKERS", detail:"330 ml", price:20000, tag:"mashhur"},
+    {name:"MILKSHAKE SNIKERS", detail:"400 ml", price:25000},
+    {name:"MILKSHAKE BOUNTY", detail:"330 ml", price:20000},
+    {name:"MILKSHAKE BOUNTY", detail:"400 ml", price:25000},
+    {name:"MILKSHAKE OREO", detail:"330 ml", price:20000},
+    {name:"MILKSHAKE OREO", detail:"400 ml", price:25000}
+  ]},
+  {cat:"Cocktail", icon:"\uD83C\uDF79", items:[
+    {name:"COCKTAIL MONIN", detail:"300 ml", price:20000},
+    {name:"COCKTAIL MONIN", detail:"400 ml", price:25000}
+  ]},
+  {cat:"Coffee", icon:"\u2615", items:[
+    {name:"ESPRESSO", detail:null, price:13000},
+    {name:"AMERICANO", detail:null, price:15000},
+    {name:"FLAT WHITE", detail:null, price:20000},
+    {name:"LATTE", detail:null, price:20000},
+    {name:"CAPPUCCINO", detail:null, price:20000},
+    {name:"MOCCACINO", detail:null, price:25000},
+    {name:"MATCHA LATTE", detail:null, price:20000, tag:"yangi"}
+  ]},
+  {cat:"Ice Coffee", icon:"\uD83E\uDDCA", items:[
+    {name:"ICE AMERICANO", detail:null, price:15000},
+    {name:"ICE LATTE", detail:null, price:20000},
+    {name:"ICE CAPPUCCINO", detail:null, price:20000},
+    {name:"ICE MATCHA LATTE", detail:null, price:20000}
+  ]},
+  {cat:"Fresh", icon:"\uD83C\uDF4A", items:[
+    {name:"APELSIN", detail:"300 ml", price:30000, tag:"mashhur"},
+    {name:"APELSIN", detail:"400 ml", price:40000},
+    {name:"OLMA", detail:"300 ml", price:20000},
+    {name:"OLMA", detail:"400 ml", price:25000},
+    {name:"SABZI", detail:"300 ml", price:10000},
+    {name:"SABZI", detail:"400 ml", price:12000},
+    {name:"LAVLAGI", detail:"300 ml", price:10000},
+    {name:"LAVLAGI", detail:"400 ml", price:15000},
+    {name:"OLMA + LAVLAGI", detail:"300 ml", price:20000},
+    {name:"OLMA + LAVLAGI", detail:"400 ml", price:25000},
+    {name:"APELSIN + SABZI", detail:"300 ml", price:20000},
+    {name:"APELSIN + SABZI", detail:"400 ml", price:30000},
+    {name:"APELSIN + OLMA", detail:"300 ml", price:25000},
+    {name:"APELSIN + OLMA", detail:"400 ml", price:35000},
+    {name:"APELSIN + OLMA + SABZI", detail:"300 ml", price:25000},
+    {name:"APELSIN + OLMA + SABZI", detail:"400 ml", price:30000},
+    {name:"APELSIN + SABZI + LAVLAGI", detail:"300 ml", price:20000},
+    {name:"APELSIN + SABZI + LAVLAGI", detail:"400 ml", price:30000}
+  ]},
+  {cat:"Smuzi", icon:"\uD83E\uDD5D", items:[
+    {name:"OLMA + BANAN", detail:"300 ml", price:15000},
+    {name:"BANAN + QULUPNAY", detail:"300 ml", price:20000},
+    {name:"BANAN + TVOROG + OVSYANKA + SUT", detail:"300 ml", price:20000}
+  ]},
+  {cat:"Detoks", icon:"\uD83C\uDF3F", items:[
+    {name:"OLMA + BODRING + SELDEREY + LIMON + IMBIR", detail:"300 ml", price:25000},
+    {name:"OLMA + KIWI + ISMALOQ", detail:"300 ml", price:20000},
+    {name:"APELSIN + SELDEREY + LIMON + IMBIR", detail:"300 ml", price:30000}
+  ]}
+];
+
+function getMenu() {
+  try {
+    var data = localStorage.getItem("diyor_menu");
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_MENU));
+}
+
+function saveMenu(menu) {
+  localStorage.setItem("diyor_menu", JSON.stringify(menu));
+}
+
+function fmt(n) {
+  return n.toLocaleString("ru-RU") + " so'm";
+}
+
+var toastTimer;
+function showToast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove("show"); }, 1800);
+}
+
+function renderCatSelect() {
+  var menu = getMenu();
+  var sel = document.getElementById("add-cat-select");
+  sel.innerHTML = "";
+  menu.forEach(function(s, i) {
+    var opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = s.icon + " " + s.cat;
+    sel.appendChild(opt);
+  });
+}
+
+function renderList() {
+  var menu = getMenu();
+  var container = document.getElementById("cat-list");
+  container.innerHTML = "";
+
+  menu.forEach(function(section, ci) {
+    var card = document.createElement("div");
+    card.className = "cat-card";
+
+    var header = document.createElement("div");
+    header.className = "cat-card-header";
+    header.innerHTML = '<h3>' + section.icon + ' ' + section.cat +
+      ' <span class="cat-count">' + section.items.length + '</span></h3>';
+
+    var actions = document.createElement("div");
+    actions.className = "cat-card-actions";
+
+    var delCatBtn = document.createElement("button");
+    delCatBtn.className = "btn btn-danger btn-sm";
+    delCatBtn.textContent = "O'chirish";
+    delCatBtn.onclick = function(e) {
+      e.stopPropagation();
+      if (confirm('"' + section.cat + '" kategoriyasini o\'chirmoqchimisiz?')) {
+        menu.splice(ci, 1);
+        saveMenu(menu);
+        renderList();
+        renderCatSelect();
+        showToast("Kategoriya o'chirildi");
+      }
+    };
+    actions.appendChild(delCatBtn);
+
+    var toggleBtn = document.createElement("button");
+    toggleBtn.className = "btn btn-outline btn-sm";
+    toggleBtn.textContent = "▼";
+    toggleBtn.onclick = function(e) {
+      e.stopPropagation();
+      var body = card.querySelector(".cat-card-body");
+      body.classList.toggle("collapsed");
+      toggleBtn.textContent = body.classList.contains("collapsed") ? "▶" : "▼";
+    };
+    actions.appendChild(toggleBtn);
+
+    header.appendChild(actions);
+    card.appendChild(header);
+
+    var body = document.createElement("div");
+    body.className = "cat-card-body";
+
+    if (section.items.length === 0) {
+      body.innerHTML = '<div class="empty-cat">Mahsulotlar yo\'q. Pastdagi formadan qo\'shing.</div>';
+    } else {
+      section.items.forEach(function(item, ii) {
+        var row = document.createElement("div");
+        row.className = "item-row";
+
+        var info = document.createElement("div");
+        info.className = "item-info";
+        info.innerHTML = '<div class="item-name">' + item.name + '</div>';
+        if (item.detail) {
+          info.innerHTML += '<div class="item-detail">' + item.detail + '</div>';
+        }
+        row.appendChild(info);
+
+        if (item.tag) {
+          var badge = document.createElement("span");
+          badge.className = "item-badge " + item.tag;
+          badge.textContent = item.tag === "mashhur" ? "🔥 Mashhur" : "🆕 Yangi";
+          row.appendChild(badge);
+        }
+
+        var price = document.createElement("div");
+        price.className = "item-price";
+        price.textContent = fmt(item.price);
+        row.appendChild(price);
+
+        var itemActions = document.createElement("div");
+        itemActions.className = "item-actions";
+
+        var editBtn = document.createElement("button");
+        editBtn.className = "btn btn-outline btn-sm";
+        editBtn.textContent = "✏️";
+        editBtn.title = "Tahrirlash";
+        editBtn.onclick = function() { openEdit(ci, ii); };
+        itemActions.appendChild(editBtn);
+
+        var rmBtn = document.createElement("button");
+        rmBtn.className = "btn btn-danger btn-sm";
+        rmBtn.textContent = "🗑";
+        rmBtn.title = "O'chirish";
+        rmBtn.onclick = function() {
+          if (confirm('"' + item.name + '" ni o\'chirmoqchimisiz?')) {
+            menu[ci].items.splice(ii, 1);
+            saveMenu(menu);
+            renderList();
+            renderCatSelect();
+            showToast("Mahsulot o'chirildi");
+          }
+        };
+        itemActions.appendChild(rmBtn);
+
+        row.appendChild(itemActions);
+        body.appendChild(row);
+      });
+    }
+
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
+// ADD CATEGORY
+function addCategory() {
+  var name = document.getElementById("new-cat-name").value.trim();
+  var icon = document.getElementById("new-cat-icon").value.trim();
+  if (!name) { showToast("Kategoriya nomini kiriting!"); return; }
+  if (!icon) icon = "📁";
+
+  var menu = getMenu();
+  menu.push({ cat: name, icon: icon, items: [] });
+  saveMenu(menu);
+  document.getElementById("new-cat-name").value = "";
+  document.getElementById("new-cat-icon").value = "";
+  renderList();
+  renderCatSelect();
+  showToast("Kategoriya qo'shildi!");
+}
+
+// ADD ITEM
+function addItem() {
+  var catIdx = parseInt(document.getElementById("add-cat-select").value);
+  var name = document.getElementById("add-item-name").value.trim();
+  var detail = document.getElementById("add-item-detail").value.trim();
+  var price = parseInt(document.getElementById("add-item-price").value);
+  var tag = document.getElementById("add-item-tag").value;
+
+  if (!name) { showToast("Mahsulot nomini kiriting!"); return; }
+  if (!price || price <= 0) { showToast("Narxni kiriting!"); return; }
+
+  var menu = getMenu();
+  if (catIdx < 0 || catIdx >= menu.length) { showToast("Kategoriyani tanlang!"); return; }
+
+  var item = { name: name, detail: detail || null, price: price };
+  if (tag) item.tag = tag;
+
+  menu[catIdx].items.push(item);
+  saveMenu(menu);
+
+  document.getElementById("add-item-name").value = "";
+  document.getElementById("add-item-detail").value = "";
+  document.getElementById("add-item-price").value = "";
+  document.getElementById("add-item-tag").value = "";
+
+  renderList();
+  showToast("Mahsulot qo'shildi!");
+}
+
+// EDIT
+var editCatIdx = -1;
+var editItemIdx = -1;
+
+function openEdit(ci, ii) {
+  editCatIdx = ci;
+  editItemIdx = ii;
+  var menu = getMenu();
+  var item = menu[ci].items[ii];
+
+  document.getElementById("edit-name").value = item.name;
+  document.getElementById("edit-detail").value = item.detail || "";
+  document.getElementById("edit-price").value = item.price;
+  document.getElementById("edit-tag").value = item.tag || "";
+  document.getElementById("edit-overlay").classList.add("open");
+}
+
+function closeEdit() {
+  document.getElementById("edit-overlay").classList.remove("open");
+}
+
+function saveEdit() {
+  var name = document.getElementById("edit-name").value.trim();
+  var detail = document.getElementById("edit-detail").value.trim();
+  var price = parseInt(document.getElementById("edit-price").value);
+  var tag = document.getElementById("edit-tag").value;
+
+  if (!name) { showToast("Nomini kiriting!"); return; }
+  if (!price || price <= 0) { showToast("Narxni kiriting!"); return; }
+
+  var menu = getMenu();
+  var item = menu[editCatIdx].items[editItemIdx];
+  item.name = name;
+  item.detail = detail || null;
+  item.price = price;
+  if (tag) { item.tag = tag; } else { delete item.tag; }
+
+  saveMenu(menu);
+  closeEdit();
+  renderList();
+  showToast("Saqlandi!");
+}
+
+// RESET
+function resetAllData() {
+  if (confirm("Barcha o'zgarishlarni bekor qilish va asl holatga qaytarishni xohlaysizmi?")) {
+    localStorage.removeItem("diyor_menu");
+    renderList();
+    renderCatSelect();
+    showToast("Barchasi asl holatga qaytarildi!");
+  }
+}
+
+renderList();
+renderCatSelect();
+</script>
+</body>
+</html>

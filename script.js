@@ -1,7 +1,7 @@
 var TG_BOT_TOKEN = "8797441270:AAGyJ8CIxeHJ-CO1DAerQGF_BKfcg-TfSUg";
 var TG_CHAT_ID = "8817975742";
 
-var MENU = [
+var DEFAULT_MENU = [
   {cat:"Doner-house", icon:"\uD83E\uDD5A", items:[
     {name:"LAVASH STANDARD", detail:null, price:28000, tag:"mashhur"},
     {name:"LAVASH (ACHCHIQ)", detail:null, price:30000},
@@ -111,6 +111,14 @@ var cart = {};
 var itemIdMap = {};
 var searchQuery = "";
 
+function getMenu() {
+  try {
+    var data = localStorage.getItem("diyor_menu");
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_MENU));
+}
+
 // --- LOCALSTORAGE ---
 function saveCart() {
   try { localStorage.setItem("diyor_cart", JSON.stringify(cart)); } catch(e) {}
@@ -178,11 +186,12 @@ function clearSearch() {
 function buildMenu() {
   var nav = document.getElementById("cat-nav");
   var main = document.getElementById("menu-main");
+  var menu = getMenu();
 
   nav.innerHTML = "";
   main.innerHTML = "";
 
-  MENU.forEach(function(section, si) {
+  menu.forEach(function(section, si) {
     var items = section.items.slice();
 
     if (searchQuery) {
