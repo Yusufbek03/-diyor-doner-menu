@@ -513,13 +513,22 @@ function closeOrderModal() {
 }
 
 // --- TELEGRAM ---
-function sendToTelegram(text) {
+function sendToTelegram(text, orderId) {
   var url = "https://api.telegram.org/bot" + TG_BOT_TOKEN + "/sendMessage";
+  var markup = JSON.stringify({
+    inline_keyboard: [
+      [
+        { text: "\u2705 Qabul qilindi", callback_data: "accept_" + orderId },
+        { text: "\uD83D\uDCE6 Tayyor", callback_data: "ready_" + orderId }
+      ]
+    ]
+  });
 
   var params = new URLSearchParams();
   params.append("chat_id", TG_CHAT_ID);
   params.append("text", text);
   params.append("parse_mode", "HTML");
+  params.append("reply_markup", markup);
 
   return fetch(url, {
     method: "POST",
@@ -527,13 +536,14 @@ function sendToTelegram(text) {
   });
 }
 
-function buildTelegramMessage() {
+function buildTelegramMessage(orderId) {
   var keys = Object.keys(cart);
   var tableVal = document.getElementById("table-number").value;
   var tableText = tableVal === "takeaway" ? "Olib ketish" : ("Stol " + tableVal);
 
   var msg = "\uD83C\uDF7D <b>Yangi buyurtma \u2014 Diyor D\u00F6ner</b>\n";
   msg += "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
+  msg += "\uD83D\uDCCB <b>Buyurtma: #" + orderId + "</b>\n";
   msg += "\uD83D\uDCCD <b>" + tableText + "</b>\n\n";
 
   for (var i = 0; i < keys.length; i++) {
@@ -555,6 +565,8 @@ function buildTelegramMessage() {
 }
 
 // --- CONFIRM ORDER ---
+var orderCounter = 0;
+
 function confirmOrder() {
   var tableVal = document.getElementById("table-number").value;
   if (!tableVal) {
@@ -562,13 +574,15 @@ function confirmOrder() {
     return;
   }
 
-  var msg = buildTelegramMessage();
+  orderCounter++;
+  var orderId = "ORD" + orderCounter;
+  var msg = buildTelegramMessage(orderId);
 
   var confirmBtn = document.querySelector(".modal-confirm");
   confirmBtn.textContent = "Yuborilmoqda...";
   confirmBtn.disabled = true;
 
-  sendToTelegram(msg).then(function() {
+  sendToTelegram(msg, orderId).then(function() {
     confirmBtn.textContent = "Buyurtma berish \u2713";
     confirmBtn.disabled = false;
     closeOrderModal();
