@@ -607,17 +607,17 @@ main {
 }
 
 /* TABLE SELECT */
-.table-select {
+.table-select, .address-field, .comment-field {
   text-align: left;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
-.table-select label {
+.table-select label, .address-field label, .comment-field label {
   display: block;
   font-size: 0.82rem; font-weight: 500;
   color: var(--text2);
   margin-bottom: 0.35rem;
 }
-.table-select select {
+.table-select select, .address-field input, .comment-field textarea {
   width: 100%;
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--border2);
@@ -627,11 +627,19 @@ main {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
   outline: none;
-  cursor: pointer;
   transition: border-color 0.2s;
-  appearance: auto;
 }
-.table-select select:focus { border-color: var(--accent); }
+.table-select select:focus, .address-field input:focus, .comment-field textarea:focus {
+  border-color: var(--accent);
+}
+.table-select select { cursor: pointer; appearance: auto; }
+.address-field input::placeholder, .comment-field textarea::placeholder {
+  color: var(--text3);
+}
+.comment-field textarea {
+  resize: none;
+  line-height: 1.4;
+}
 
 .modal-actions { display: flex; gap: 0.6rem; }
 .modal-cancel {

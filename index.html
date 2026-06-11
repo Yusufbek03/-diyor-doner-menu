@@ -81,7 +81,7 @@
     <div class="modal-items" id="modal-items-list"></div>
     <div class="table-select">
       <label for="table-number">Stol raqami</label>
-      <select id="table-number">
+      <select id="table-number" onchange="onTableChange()">
         <option value="">Tanlang...</option>
         <option value="1">Stol 1</option>
         <option value="2">Stol 2</option>
@@ -94,7 +94,16 @@
         <option value="9">Stol 9</option>
         <option value="10">Stol 10</option>
         <option value="takeaway">Olib ketish</option>
+        <option value="delivery">Yetkazish</option>
       </select>
+    </div>
+    <div class="address-field" id="address-field" style="display:none">
+      <label for="order-address">Manzil</label>
+      <input type="text" id="order-address" placeholder="Manzilni kiriting...">
+    </div>
+    <div class="comment-field">
+      <label for="order-comment">Izoh (ixtiyoriy)</label>
+      <textarea id="order-comment" rows="2" placeholder="Maxsus so'rovlar, allergiyalar..."></textarea>
     </div>
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeOrderModal()">Orqaga</button>

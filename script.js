@@ -510,6 +510,10 @@ function openOrderModal() {
 
 function closeOrderModal() {
   document.getElementById("modal-overlay").classList.remove("open");
+  document.getElementById("table-number").value = "";
+  document.getElementById("order-address").value = "";
+  document.getElementById("order-comment").value = "";
+  document.getElementById("address-field").style.display = "none";
 }
 
 // --- TELEGRAM ---
@@ -530,11 +534,22 @@ function sendToTelegram(text) {
 function buildTelegramMessage() {
   var keys = Object.keys(cart);
   var tableVal = document.getElementById("table-number").value;
-  var tableText = tableVal === "takeaway" ? "Olib ketish" : ("Stol " + tableVal);
+  var address = document.getElementById("order-address").value.trim();
+  var comment = document.getElementById("order-comment").value.trim();
+
+  var tableText = tableVal === "takeaway" ? "Olib ketish" :
+                  tableVal === "delivery" ? "Yetkazish" :
+                  tableVal ? "Stol " + tableVal : "Tanlanmagan";
 
   var msg = "\uD83C\uDF7D <b>Yangi buyurtma \u2014 Diyor D\u00F6ner</b>\n";
   msg += "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
-  msg += "\uD83D\uDCCD <b>" + tableText + "</b>\n\n";
+  msg += "\uD83D\uDCCD <b>" + tableText + "</b>\n";
+
+  if (tableVal === "delivery" && address) {
+    msg += "\uD83D\uDCCD <b>Manzil:</b> " + address + "\n";
+  }
+
+  msg += "\n";
 
   for (var i = 0; i < keys.length; i++) {
     var id = keys[i];
@@ -550,6 +565,10 @@ function buildTelegramMessage() {
 
   msg += "\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
   msg += "\uD83D\uDCB0 <b>Jami: " + fmt(cartTotal()) + "</b>\n";
+
+  if (comment) {
+    msg += "\n\uD83D\uDCDD <b>Izoh:</b> " + comment + "\n";
+  }
 
   return msg;
 }
@@ -602,6 +621,18 @@ function confirmOrder() {
 
 function resetAll() {
   location.reload();
+}
+
+// --- TABLE CHANGE ---
+function onTableChange() {
+  var val = document.getElementById("table-number").value;
+  var addrField = document.getElementById("address-field");
+  if (val === "delivery") {
+    addrField.style.display = "block";
+  } else {
+    addrField.style.display = "none";
+    document.getElementById("order-address").value = "";
+  }
 }
 
 // --- NOTIFY MODAL ---
