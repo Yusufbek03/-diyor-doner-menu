@@ -513,22 +513,13 @@ function closeOrderModal() {
 }
 
 // --- TELEGRAM ---
-function sendToTelegram(text, orderId) {
+function sendToTelegram(text) {
   var url = "https://api.telegram.org/bot" + TG_BOT_TOKEN + "/sendMessage";
-  var markup = JSON.stringify({
-    inline_keyboard: [
-      [
-        { text: "\u2705 Qabul qilindi", callback_data: "accept_" + orderId },
-        { text: "\uD83D\uDCE6 Tayyor", callback_data: "ready_" + orderId }
-      ]
-    ]
-  });
 
   var params = new URLSearchParams();
   params.append("chat_id", TG_CHAT_ID);
   params.append("text", text);
   params.append("parse_mode", "HTML");
-  params.append("reply_markup", markup);
 
   return fetch(url, {
     method: "POST",
@@ -536,14 +527,13 @@ function sendToTelegram(text, orderId) {
   });
 }
 
-function buildTelegramMessage(orderId) {
+function buildTelegramMessage() {
   var keys = Object.keys(cart);
   var tableVal = document.getElementById("table-number").value;
   var tableText = tableVal === "takeaway" ? "Olib ketish" : ("Stol " + tableVal);
 
   var msg = "\uD83C\uDF7D <b>Yangi buyurtma \u2014 Diyor D\u00F6ner</b>\n";
   msg += "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n";
-  msg += "\uD83D\uDCCB <b>Buyurtma: #" + orderId + "</b>\n";
   msg += "\uD83D\uDCCD <b>" + tableText + "</b>\n\n";
 
   for (var i = 0; i < keys.length; i++) {
@@ -565,8 +555,6 @@ function buildTelegramMessage(orderId) {
 }
 
 // --- CONFIRM ORDER ---
-var orderCounter = 0;
-
 function confirmOrder() {
   var tableVal = document.getElementById("table-number").value;
   if (!tableVal) {
@@ -574,15 +562,13 @@ function confirmOrder() {
     return;
   }
 
-  orderCounter++;
-  var orderId = "ORD" + orderCounter;
-  var msg = buildTelegramMessage(orderId);
+  var msg = buildTelegramMessage();
 
   var confirmBtn = document.querySelector(".modal-confirm");
   confirmBtn.textContent = "Yuborilmoqda...";
   confirmBtn.disabled = true;
 
-  sendToTelegram(msg, orderId).then(function() {
+  sendToTelegram(msg).then(function() {
     confirmBtn.textContent = "Buyurtma berish \u2713";
     confirmBtn.disabled = false;
     closeOrderModal();
@@ -615,7 +601,7 @@ function confirmOrder() {
 }
 
 function resetAll() {
-  document.getElementById("success-screen").classList.remove("show");
+  location.reload();
 }
 
 // --- NOTIFY MODAL ---
