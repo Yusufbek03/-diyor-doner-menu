@@ -733,6 +733,24 @@ Object.keys(cart).forEach(function(id) {
   updateCtrl(id);
 });
 
+// --- ADMIN SECRET ---
+var _logoClicks = 0;
+var _logoTimer = null;
+var logoEl = document.getElementById("logo");
+if (logoEl) {
+  logoEl.style.cursor = "default";
+  logoEl.addEventListener("click", function() {
+    _logoClicks++;
+    clearTimeout(_logoTimer);
+    _logoTimer = setTimeout(function() { _logoClicks = 0; }, 2000);
+    if (_logoClicks >= 5) {
+      _logoClicks = 0;
+      var link = document.getElementById("admin-link");
+      link.style.display = link.style.display === "none" ? "block" : "none";
+    }
+  });
+}
+
 // --- ADMIN SYNC ---
 if (typeof BroadcastChannel !== "undefined") {
   var _syncCh = new BroadcastChannel("diyor_menu_sync");
