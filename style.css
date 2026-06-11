@@ -380,6 +380,12 @@ main {
 [data-theme="dark"] .item-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
 .item-card.in-cart { border-color: rgba(184,134,11,0.3); }
 
+.item-img {
+  width: clamp(56px, 12vw, 72px); height: clamp(56px, 12vw, 72px);
+  object-fit: cover; border-radius: 10px; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
 .item-info { flex: 1; min-width: 0; }
 .item-name {
   font-size: clamp(0.82rem, 2vw, 0.92rem); font-weight: 500;
@@ -726,6 +732,7 @@ main {
   .cat-nav-wrap { top: 52px; }
   .items-grid { grid-template-columns: 1fr; gap: 8px; }
   .item-card { padding: 0.8rem 0.9rem; gap: 0.5rem; }
+  .item-img { width: 48px; height: 48px; }
   .item-name { white-space: normal; line-height: 1.35; }
   .drawer { width: 100vw; }
   .notify-modal { width: 100vw; }
@@ -750,6 +757,7 @@ main {
   main { padding: 0 0.85rem 7rem; }
   .search-sort-wrap { padding: 0 0.85rem 0.8rem; }
   .item-card { padding: 0.7rem 0.8rem; }
+  .item-img { width: 40px; height: 40px; }
   .item-price { font-size: 0.85rem; margin-bottom: 0.3rem; }
   .add-btn { padding: 3px 8px; font-size: 0.7rem; }
   .add-btn svg { width: 10px; height: 10px; }

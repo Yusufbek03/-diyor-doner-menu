@@ -168,6 +168,26 @@
     .edit-modal input:focus, .edit-modal select:focus { border-color: var(--accent); }
     .edit-actions { display: flex; gap: 8px; margin-top: 1rem; }
 
+    /* IMAGE UPLOAD */
+    .img-upload-label { cursor: pointer; }
+    .img-upload-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 0.4rem 0.8rem; border: 1px dashed var(--border2);
+      border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text2);
+      transition: all 0.2s;
+    }
+    .img-upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .img-preview {
+      width: 56px; height: 56px; object-fit: cover;
+      border-radius: var(--radius-sm); border: 1px solid var(--border2);
+      flex-shrink: 0;
+    }
+    .edit-img-row { display: flex; align-items: center; gap: 8px; margin-top: 0.3rem; }
+    .item-row .item-img {
+      width: 44px; height: 44px; object-fit: cover;
+      border-radius: 8px; border: 1px solid var(--border); flex-shrink: 0;
+    }
+
     /* TOAST */
     .toast {
       position: fixed; bottom: 2rem; left: 50%;
@@ -225,6 +245,16 @@
         <option value="mashhur">🔥 Mashhur</option>
         <option value="yangi">🆕 Yangi</option>
       </select>
+    </div>
+    <div class="form-row">
+      <label class="img-upload-label">
+        <input type="file" id="add-item-img" accept="image/*" onchange="previewAddImg(event)" style="display:none">
+        <span class="img-upload-btn">📷 Rasm yuklash</span>
+      </label>
+      <img id="add-img-preview" class="img-preview" style="display:none">
+      <button class="btn btn-outline btn-sm" id="add-img-clear" style="display:none" onclick="clearAddImg()">Rasmni o'chirish</button>
+    </div>
+    <div class="form-row">
       <button class="btn btn-success" onclick="addItem()">Qo'shish</button>
     </div>
   </div>
@@ -249,6 +279,15 @@
       <option value="mashhur">🔥 Mashhur</option>
       <option value="yangi">🆕 Yangi</option>
     </select>
+    <label>Rasm</label>
+    <div class="edit-img-row">
+      <img id="edit-img-preview" class="img-preview" style="display:none">
+      <label class="img-upload-label">
+        <input type="file" id="edit-item-img" accept="image/*" onchange="previewEditImg(event)" style="display:none">
+        <span class="img-upload-btn">📷 Rasm</span>
+      </label>
+      <button class="btn btn-outline btn-sm" id="edit-img-clear" style="display:none" onclick="clearEditImg()">O'chirish</button>
+    </div>
     <div class="edit-actions">
       <button class="btn btn-outline" onclick="closeEdit()">Bekor qilish</button>
       <button class="btn btn-primary" onclick="saveEdit()">Saqlash</button>
@@ -375,10 +414,69 @@ function getMenu() {
 
 function saveMenu(menu) {
   localStorage.setItem("diyor_menu", JSON.stringify(menu));
+  if (typeof BroadcastChannel !== "undefined") {
+    new BroadcastChannel("diyor_menu_sync").postMessage("update");
+  }
 }
 
 function fmt(n) {
   return n.toLocaleString("ru-RU") + " so'm";
+}
+
+// --- IMAGE RESIZE ---
+function resizeImage(file, maxSize, callback) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement("canvas");
+      var w = img.width, h = img.height;
+      if (w > h) { if (w > maxSize) { h = h * maxSize / w; w = maxSize; } }
+      else { if (h > maxSize) { w = w * maxSize / h; h = maxSize; } }
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL("image/jpeg", 0.7));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+var addImgData = null;
+var editImgData = null;
+
+function previewAddImg(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  resizeImage(file, 200, function(data) {
+    addImgData = data;
+    document.getElementById("add-img-preview").src = data;
+    document.getElementById("add-img-preview").style.display = "block";
+    document.getElementById("add-img-clear").style.display = "inline-block";
+  });
+}
+function clearAddImg() {
+  addImgData = null;
+  document.getElementById("add-item-img").value = "";
+  document.getElementById("add-img-preview").style.display = "none";
+  document.getElementById("add-img-clear").style.display = "none";
+}
+function previewEditImg(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  resizeImage(file, 200, function(data) {
+    editImgData = data;
+    document.getElementById("edit-img-preview").src = data;
+    document.getElementById("edit-img-preview").style.display = "block";
+    document.getElementById("edit-img-clear").style.display = "inline-block";
+  });
+}
+function clearEditImg() {
+  editImgData = null;
+  document.getElementById("edit-item-img").value = "";
+  document.getElementById("edit-img-preview").style.display = "none";
+  document.getElementById("edit-img-clear").style.display = "none";
 }
 
 var toastTimer;
@@ -458,12 +556,18 @@ function renderList() {
         var row = document.createElement("div");
         row.className = "item-row";
 
+        if (item.img) {
+          var img = document.createElement("img");
+          img.className = "item-img";
+          img.src = item.img;
+          row.appendChild(img);
+        }
+
         var info = document.createElement("div");
         info.className = "item-info";
-        info.innerHTML = '<div class="item-name">' + item.name + '</div>';
-        if (item.detail) {
-          info.innerHTML += '<div class="item-detail">' + item.detail + '</div>';
-        }
+        var nameHtml = '<div class="item-name">' + item.name + '</div>';
+        if (item.detail) nameHtml += '<div class="item-detail">' + item.detail + '</div>';
+        info.innerHTML = nameHtml;
         row.appendChild(info);
 
         if (item.tag) {
@@ -546,10 +650,12 @@ function addItem() {
 
   var item = { name: name, detail: detail || null, price: price };
   if (tag) item.tag = tag;
+  if (addImgData) item.img = addImgData;
 
   menu[catIdx].items.push(item);
   saveMenu(menu);
 
+  clearAddImg();
   document.getElementById("add-item-name").value = "";
   document.getElementById("add-item-detail").value = "";
   document.getElementById("add-item-price").value = "";
@@ -566,6 +672,7 @@ var editItemIdx = -1;
 function openEdit(ci, ii) {
   editCatIdx = ci;
   editItemIdx = ii;
+  editImgData = null;
   var menu = getMenu();
   var item = menu[ci].items[ii];
 
@@ -573,6 +680,17 @@ function openEdit(ci, ii) {
   document.getElementById("edit-detail").value = item.detail || "";
   document.getElementById("edit-price").value = item.price;
   document.getElementById("edit-tag").value = item.tag || "";
+  document.getElementById("edit-item-img").value = "";
+
+  if (item.img) {
+    document.getElementById("edit-img-preview").src = item.img;
+    document.getElementById("edit-img-preview").style.display = "block";
+    document.getElementById("edit-img-clear").style.display = "inline-block";
+    editImgData = item.img;
+  } else {
+    document.getElementById("edit-img-preview").style.display = "none";
+    document.getElementById("edit-img-clear").style.display = "none";
+  }
   document.getElementById("edit-overlay").classList.add("open");
 }
 
@@ -595,6 +713,7 @@ function saveEdit() {
   item.detail = detail || null;
   item.price = price;
   if (tag) { item.tag = tag; } else { delete item.tag; }
+  if (editImgData) { item.img = editImgData; } else { delete item.img; }
 
   saveMenu(menu);
   closeEdit();
@@ -606,6 +725,9 @@ function saveEdit() {
 function resetAllData() {
   if (confirm("Barcha o'zgarishlarni bekor qilish va asl holatga qaytarishni xohlaysizmi?")) {
     localStorage.removeItem("diyor_menu");
+    if (typeof BroadcastChannel !== "undefined") {
+      new BroadcastChannel("diyor_menu_sync").postMessage("update");
+    }
     renderList();
     renderCatSelect();
     showToast("Barchasi asl holatga qaytarildi!");

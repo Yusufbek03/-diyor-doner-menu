@@ -237,6 +237,14 @@ function buildMenu() {
       card.id = "card-" + safeId;
       card.style.animationDelay = (idx * 0.03) + "s";
 
+      if (item.img) {
+        var cardImg = document.createElement("img");
+        cardImg.className = "item-img";
+        cardImg.src = item.img;
+        cardImg.alt = item.name;
+        card.appendChild(cardImg);
+      }
+
       var info = document.createElement("div");
       info.className = "item-info";
       var nameEl = document.createElement("div");
@@ -723,4 +731,23 @@ updateCartBadge();
 
 Object.keys(cart).forEach(function(id) {
   updateCtrl(id);
+});
+
+// --- ADMIN SYNC ---
+if (typeof BroadcastChannel !== "undefined") {
+  var _syncCh = new BroadcastChannel("diyor_menu_sync");
+  _syncCh.onmessage = function() {
+    loadCart();
+    buildMenu();
+    updateCartBadge();
+    Object.keys(cart).forEach(function(id) { updateCtrl(id); });
+  };
+}
+window.addEventListener("storage", function(e) {
+  if (e.key === "diyor_menu") {
+    loadCart();
+    buildMenu();
+    updateCartBadge();
+    Object.keys(cart).forEach(function(id) { updateCtrl(id); });
+  }
 });
