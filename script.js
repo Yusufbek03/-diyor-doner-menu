@@ -233,7 +233,7 @@ function buildMenu() {
       var safeId = escId(id);
 
       var card = document.createElement("div");
-      card.className = "item-card";
+      card.className = "item-card" + (item.img ? " has-img" : "");
       card.id = "card-" + safeId;
       card.style.animationDelay = (idx * 0.03) + "s";
 
@@ -244,6 +244,9 @@ function buildMenu() {
         cardImg.alt = item.name;
         card.appendChild(cardImg);
       }
+
+      var body = document.createElement("div");
+      body.className = "item-body";
 
       var info = document.createElement("div");
       info.className = "item-info";
@@ -262,6 +265,11 @@ function buildMenu() {
         badgeEl.className = "item-badge " + item.tag;
         badgeEl.textContent = item.tag === "mashhur" ? "\uD83D\uDD25 Mashhur" : "\uD83C\uDD95 Yangi";
         info.appendChild(badgeEl);
+      }
+
+      if (item.img) {
+        var bottom = document.createElement("div");
+        bottom.className = "item-bottom";
       }
 
       var right = document.createElement("div");
@@ -284,8 +292,16 @@ function buildMenu() {
       ctrl.appendChild(addBtn);
 
       right.appendChild(ctrl);
-      card.appendChild(info);
-      card.appendChild(right);
+
+      if (item.img) {
+        bottom.appendChild(info);
+        bottom.appendChild(right);
+        body.appendChild(bottom);
+        card.appendChild(body);
+      } else {
+        card.appendChild(info);
+        card.appendChild(right);
+      }
       grid.appendChild(card);
     });
 
