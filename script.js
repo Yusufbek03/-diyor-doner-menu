@@ -515,24 +515,24 @@ function closeOrderModal() {
 // --- TELEGRAM ---
 function sendToTelegram(text, orderId) {
   var url = "https://api.telegram.org/bot" + TG_BOT_TOKEN + "/sendMessage";
-  var payload = {
-    chat_id: TG_CHAT_ID,
-    text: text,
-    parse_mode: "HTML",
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: "\u2705 Qabul qilindi", callback_data: "accept_" + orderId },
-          { text: "\uD83D\uDCE6 Tayyor", callback_data: "ready_" + orderId }
-        ]
+  var markup = JSON.stringify({
+    inline_keyboard: [
+      [
+        { text: "\u2705 Qabul qilindi", callback_data: "accept_" + orderId },
+        { text: "\uD83D\uDCE6 Tayyor", callback_data: "ready_" + orderId }
       ]
-    }
-  };
+    ]
+  });
+
+  var params = new URLSearchParams();
+  params.append("chat_id", TG_CHAT_ID);
+  params.append("text", text);
+  params.append("parse_mode", "HTML");
+  params.append("reply_markup", markup);
 
   return fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: params
   });
 }
 
