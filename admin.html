@@ -441,7 +441,7 @@ function resizeImage(file, maxSize, callback) {
       canvas.width = w;
       canvas.height = h;
       canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-      callback(canvas.toDataURL("image/jpeg", 0.6));
+      callback(canvas.toDataURL("image/jpeg", 0.75));
     };
     img.src = e.target.result;
   };
@@ -454,7 +454,7 @@ var editImgData = null;
 function previewAddImg(e) {
   var file = e.target.files[0];
   if (!file) return;
-  resizeImage(file, 128, function(data) {
+  resizeImage(file, 400, function(data) {
     addImgData = data;
     document.getElementById("add-img-preview").src = data;
     document.getElementById("add-img-preview").style.display = "block";
@@ -470,7 +470,7 @@ function clearAddImg() {
 function previewEditImg(e) {
   var file = e.target.files[0];
   if (!file) return;
-  resizeImage(file, 128, function(data) {
+  resizeImage(file, 400, function(data) {
     editImgData = data;
     document.getElementById("edit-img-preview").src = data;
     document.getElementById("edit-img-preview").style.display = "block";
